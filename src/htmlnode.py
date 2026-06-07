@@ -55,7 +55,7 @@ class ParentNode(HTMLNode):
         children: list["ParentNode"] | None = None,
         props: dict[str, str] | None = None,
     ):
-        super().__init__(tag, None, children, props)
+        super().__init__(tag, None, children, props)  # pyright: ignore[reportArgumentType]
 
     def to_html(self):
         if self.tag is None:
@@ -65,4 +65,7 @@ class ParentNode(HTMLNode):
         final_response = ""
         for child in self.children:
             final_response += f"{child.to_html()}"
-        return final_response
+        return f"<{self.tag}>{final_response}</{self.tag}>"
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(tag={self.tag},children={self.children},props={self.props})"
