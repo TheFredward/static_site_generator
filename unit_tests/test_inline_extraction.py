@@ -3,6 +3,7 @@ import unittest
 from src.inline_extraction import (
     extract_markdown_images,
     extract_markdown_links,
+    markdown_to_blocks,
     split_nodes_image,
     split_nodes_links,
     text_to_textnodes,
@@ -102,7 +103,6 @@ class TestInlineExtraction(unittest.TestCase):
         )
 
     def test_split_all(self):
-        self.maxDiff = None
         text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
         new_nodes = text_to_textnodes(text)
 
@@ -123,3 +123,51 @@ class TestInlineExtraction(unittest.TestCase):
             ],
             new_nodes,
         )
+
+    def test_markdown_to_blocks(self):
+        md = """
+this is **bolded** paragraph
+
+this is another paragraph with _italic_ text and `code` here
+this is the same paragraph on a new line
+
+- this is a list
+- with items
+"""
+        blocks = markdown_to_blocks(md)
+        self.assertListEqual(
+            blocks,
+            [
+                "this is **bolded** paragraph",
+                "this is another paragraph with _italic_ text and `code` here\nthis is the same paragraph on a new line",
+                "- this is a list\n- with items",
+            ],
+        )
+
+    def test_markdown_to_blocks_extra_spaces(self):
+        md = """
+this is **bolded** and _italic_ paragraph
+
+this is another paragraph with _italic_ text and `code` here
+
+this is A NEW Paragraph (Two empty lines coming next!)
+
+
+
+- this is a list
+- with items
+"""
+        blocks = markdown_to_blocks(md)
+        self.assertListEqual(
+            blocks,
+            [
+                "this is **bolded** and _italic_ paragraph",
+                "this is another paragraph with _italic_ text and `code` here",
+                "this is A NEW Paragraph (Two empty lines coming next!)",
+                "- this is a list\n- with items",
+            ],
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()

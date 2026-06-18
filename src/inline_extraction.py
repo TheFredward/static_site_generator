@@ -1,5 +1,4 @@
 import re
-from readline import append_history_file
 
 from src.textnode import TextNode, TextType, split_nodes_delimiter
 
@@ -78,3 +77,13 @@ def text_to_textnodes(text):
     text_node = split_nodes_image(text_node)
     text_node = split_nodes_links(text_node)
     return text_node
+
+
+def markdown_to_blocks(markdown):
+    block_list = markdown.split("\n\n")
+    filtered_blocks = []
+    for block_item in block_list:
+        if block_item != "":
+            filtered_blocks.append(block_item.strip())
+
+    return filtered_blocks
