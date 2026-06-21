@@ -25,8 +25,8 @@ class TextBlockType(unittest.TestCase):
 
     def test_quote_testcase(self):
         markdown_quote_test_1 = block_to_block_type('> "quote is here!"')
-        markdown_quote_test_2 = block_to_block_type('>"quote is here!"')
-        markdown_quote_test_failure_1 = block_to_block_type("> quote is here!")
+        markdown_quote_test_2 = block_to_block_type(">quote is here!")
+        markdown_quote_test_failure_1 = block_to_block_type("<quote is here!")
         self.assertEqual(BlockType.QUOTE, markdown_quote_test_1)
         self.assertEqual(BlockType.QUOTE, markdown_quote_test_2)
         self.assertEqual(BlockType.PARAGRAPH, markdown_quote_test_failure_1)
@@ -60,7 +60,7 @@ class TextBlockType(unittest.TestCase):
             "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>",
         )
 
-    def codeblock(self):
+    def test_codeblock(self):
         md = """
     ```
     This is text that _should_ remain
@@ -74,7 +74,3 @@ class TextBlockType(unittest.TestCase):
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
-
-
-if __name__ == "__main__":
-    unittest.main()

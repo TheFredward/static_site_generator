@@ -32,15 +32,15 @@ class TextNode:
 def text_node_to_html_node(text_node: TextNode) -> LeafNode:
     match text_node.text_type:
         case TextType.TEXT:
-            return LeafNode(None, text_node.text, None).to_html()  # pyright: ignore[reportReturnType]
+            return LeafNode(None, text_node.text, None)
         case TextType.BOLD:
-            return LeafNode("b", text_node.text, None).to_html()  # pyright: ignore[reportReturnType]
+            return LeafNode("b", text_node.text, None)
         case TextType.ITALIC:
-            return LeafNode("i", text_node.text, None).to_html()  # pyright: ignore[reportReturnType]
+            return LeafNode("i", text_node.text, None)
         case TextType.CODE:
-            return LeafNode("code", text_node.text, None).to_html()  # pyright: ignore[reportReturnType]
+            return LeafNode("code", text_node.text, None)
         case TextType.LINK:
-            return LeafNode("a", text_node.text, {"href": text_node.url}).to_html()  # pyright: ignore[reportReturnType, reportArgumentType]
+            return LeafNode("a", text_node.text, {"href": text_node.url})
         case TextType.IMAGE:
             return LeafNode(
                 "img", "", {"src": text_node.url, "alt": text_node.text}
@@ -58,7 +58,6 @@ def split_nodes_delimiter(
         split_nodes = []
         sections = old_node.text.split(delimiter)
         if len(sections) % 2 == 0:
-            print(sections)
             raise ValueError("invalid markdown, formatted section not closed")
         for i in range(len(sections)):
             if sections[i] == "":

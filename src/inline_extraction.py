@@ -83,7 +83,17 @@ def markdown_to_blocks(markdown):
     block_list = markdown.split("\n\n")
     filtered_blocks = []
     for block_item in block_list:
+        block_item = block_item.strip()
         if block_item != "":
-            filtered_blocks.append(block_item.strip())
-
+            filtered_blocks.append(block_item)
     return filtered_blocks
+
+
+def extract_title(markdown):
+    # It only needs to fetch the h1 header which is denoted with a
+    # single # at the beginning
+    # If this doesn't exists then raise exception
+    markdown_lines = markdown_to_blocks(markdown)
+    for line in markdown_lines:
+        if line[0:2] == "# ":
+            print(line)

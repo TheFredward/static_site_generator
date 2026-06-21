@@ -3,6 +3,7 @@ import unittest
 from src.inline_extraction import (
     extract_markdown_images,
     extract_markdown_links,
+    extract_title,
     markdown_to_blocks,
     split_nodes_image,
     split_nodes_links,
@@ -167,6 +168,17 @@ this is A NEW Paragraph (Two empty lines coming next!)
                 "- this is a list\n- with items",
             ],
         )
+
+    def test_extract_title(self):
+        md = """
+# this is **bolded** and _italic_ paragraph
+
+## this is another paragraph with _italic_ text and `code` here
+
+this is A NEW Paragraph (Two empty lines coming next!)
+"""
+
+        extract_title(md)
 
 
 if __name__ == "__main__":

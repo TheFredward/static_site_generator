@@ -1,5 +1,6 @@
 import re
 from enum import Enum
+from unittest import result
 
 from src.htmlnode import HTMLNode, LeafNode, ParentNode
 from src.inline_extraction import markdown_to_blocks, text_to_textnodes
@@ -16,11 +17,19 @@ class BlockType(Enum):
 
 
 def block_to_block_type(markdown_text):
+    markdown_lines = markdown_text.split("\n")
     if re.match(r"^#{1,6}\s", markdown_text):
         return BlockType.HEADING
-    elif markdown_text.startswith("``` "):
+    elif markdown_lines[0].startswith("```") and markdown_lines[-1].strip().startswith(
+        "```"
+    ):
         return BlockType.CODE
-    elif markdown_text.startswith('> "') or markdown_text.startswith('>"'):
+    elif markdown_lines[0].startswith("> ") or markdown_lines[0].startswith(">"):
+        for i in range(1, len(markdown_lines)):
+            if markdown_lines[i].startswith("> ") or markdown_lines[i].startswith(">"):
+                continue
+            else:
+                return BlockType.PARAGRAPH
         return BlockType.QUOTE
     elif markdown_text.startswith("- "):
         return BlockType.UNORDERED_LIST
@@ -34,7 +43,8 @@ def text_to_children(block_text):
     text_nodes = text_to_textnodes(block_text)
     leaf_nodes = []
     for text_node in text_nodes:
-        leaf_nodes.append(text_node_to_html_node(text_node))
+        result = text_node_to_html_node(text_node)
+        leaf_nodes.append(result)
     return leaf_nodes
 
 
@@ -47,7 +57,9 @@ def markdown_to_html_node(markdown):
         match block_type:
             case BlockType.PARAGRAPH:
                 html_tag = "p"
-                leafNodes = text_to_children(block)
+                removal_newlines = block.strip().split("\n")
+                cleaned_block = " ".join(line.strip() for line in removal_newlines)
+                leafNodes = text_to_children(cleaned_block)
                 parentNodes.append(ParentNode(html_tag, leafNodes))
             case BlockType.HEADING:
                 header_length = len(block) - len(block.strip("#"))
@@ -57,8 +69,10 @@ def markdown_to_html_node(markdown):
                 parentNodes.append(ParentNode(html_tag, leafNodes))
             case BlockType.CODE:
                 html_tag = "code"
-                cleaned_block = block.strip("`")
-                textNode = TextNode(cleaned_block, TextType.TEXT)
+                cleaned_block = block[4:-3]
+                cleaned_block_lines = cleaned_block.split("\n")
+                final_block = "\n".join(line.strip() for line in cleaned_block_lines)
+                textNode = TextNode(final_block, TextType.TEXT)
                 leafNode = text_node_to_html_node(textNode)
                 parentNodes.append(
                     ParentNode("pre", [ParentNode(html_tag, [leafNode])])
