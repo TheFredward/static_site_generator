@@ -1,0 +1,6 @@
+BASE_DIR = "/home/thefredward/workspace/thefredward/static_site_generator"
+CONTENT_DIR = "content"
+STATIC_DIR = "static"
+PUBLIC_DIR = "public"
+INDEX = "index.md"
+TEMPLATE_FILE = "template.html"

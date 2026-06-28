@@ -1,6 +1,6 @@
 from enum import Enum
 
-from src.htmlnode import LeafNode
+from htmlnode import LeafNode
 
 
 class TextType(Enum):
@@ -40,11 +40,9 @@ def text_node_to_html_node(text_node: TextNode) -> LeafNode:
         case TextType.CODE:
             return LeafNode("code", text_node.text, None)
         case TextType.LINK:
-            return LeafNode("a", text_node.text, {"href": text_node.url})
+            return LeafNode("a", text_node.text, {"href": text_node.url})  # pyright: ignore[reportArgumentType]
         case TextType.IMAGE:
-            return LeafNode(
-                "img", "", {"src": text_node.url, "alt": text_node.text}
-            ).to_html()  # pyright: ignore[reportReturnType, reportArgumentType]
+            return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})  # pyright: ignore[reportArgumentType]
 
 
 def split_nodes_delimiter(

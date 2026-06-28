@@ -1,9 +1,25 @@
-from file_interactions import check_status, copy_files
+import os
+import sys
+
+from environments import BASE_DIR, CONTENT_DIR, INDEX, PUBLIC_DIR, TEMPLATE_FILE
+from file_interactions import (
+    check_status,
+    copy_files,
+    generate_pages_recursively,
+)
 
 
 def main():
-    check_status("public")
+    basepath = "/"
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
+        print(f"Using the following {basepath}")
+    else:
+        print(f"No basepath was passed, will use default: {basepath}")
+
+    check_status(PUBLIC_DIR)
     copy_files()
+    generate_pages_recursively(basepath)
 
 
 if __name__ == "__main__":

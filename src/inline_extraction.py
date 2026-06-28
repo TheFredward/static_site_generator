@@ -1,6 +1,6 @@
 import re
 
-from src.textnode import TextNode, TextType, split_nodes_delimiter
+from textnode import TextNode, TextType, split_nodes_delimiter
 
 
 def extract_markdown_images(text):
@@ -9,7 +9,7 @@ def extract_markdown_images(text):
 
 
 def extract_markdown_links(text):
-    matches = re.findall(r"[^\!]\[([^\]]*)\]\(([^)]*)\)", text)
+    matches = re.findall(r"\[([^\]]*)\]\(([^)]*)\)", text)
     return matches
 
 
@@ -90,10 +90,9 @@ def markdown_to_blocks(markdown):
 
 
 def extract_title(markdown):
-    # It only needs to fetch the h1 header which is denoted with a
-    # single # at the beginning
-    # If this doesn't exists then raise exception
     markdown_lines = markdown_to_blocks(markdown)
     for line in markdown_lines:
         if line[0:2] == "# ":
-            print(line)
+            cleaned_header = line[2:].strip()
+            return cleaned_header
+    raise Exception("No header_1 found!")

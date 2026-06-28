@@ -177,8 +177,17 @@ this is A NEW Paragraph (Two empty lines coming next!)
 
 this is A NEW Paragraph (Two empty lines coming next!)
 """
+        md_2 = "# Sonnet coming soon   "
+        md_3 = "## Testing dual #'s"
+        md_4 = " # adding extra whitespace"
 
-        extract_title(md)
+        md_result = extract_title(md)
+        md_2_result = extract_title(md_2)
+        md_4_result = extract_title(md_4)
+        self.assertEqual(md_result, "this is **bolded** and _italic_ paragraph")
+        self.assertEqual(md_2_result, "Sonnet coming soon")
+        self.assertRaises(Exception, extract_title, md_3)
+        self.assertEqual(md_4_result, "adding extra whitespace")
 
 
 if __name__ == "__main__":

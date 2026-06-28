@@ -1,10 +1,9 @@
 import re
 from enum import Enum
-from unittest import result
 
-from src.htmlnode import HTMLNode, LeafNode, ParentNode
-from src.inline_extraction import markdown_to_blocks, text_to_textnodes
-from src.textnode import TextNode, TextType, text_node_to_html_node
+from htmlnode import HTMLNode, LeafNode, ParentNode
+from inline_extraction import markdown_to_blocks, text_to_textnodes
+from textnode import TextNode, TextType, text_node_to_html_node
 
 
 class BlockType(Enum):
@@ -64,6 +63,7 @@ def markdown_to_html_node(markdown):
             case BlockType.HEADING:
                 header_length = len(block) - len(block.strip("#"))
                 cleaned_block = block.lstrip("#")
+                cleaned_block = cleaned_block.strip()
                 html_tag = f"h{header_length}"
                 leafNodes = text_to_children(cleaned_block)
                 parentNodes.append(ParentNode(html_tag, leafNodes))
@@ -101,7 +101,7 @@ def markdown_to_html_node(markdown):
                 split_block = block.split("\n")
                 innerNodes = []
                 for single_line in split_block:
-                    cleaned_line = re.sub(r"\d+", "", single_line, count=1)
+                    cleaned_line = re.sub(r"\d+.\s", "", single_line, count=1)
                     leafNodes = text_to_children(cleaned_line)
                     innerNodes.append(ParentNode("li", leafNodes))
                 parentNodes.append(ParentNode(html_tag, innerNodes))
