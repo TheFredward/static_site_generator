@@ -1,7 +1,7 @@
 import os
 import sys
 
-from environments import BASE_DIR, CONTENT_DIR, INDEX, PUBLIC_DIR, TEMPLATE_FILE
+from environments import BASE_DIR, PUBLIC_DIR
 from file_interactions import (
     check_status,
     copy_files,
@@ -19,7 +19,9 @@ def main():
 
     check_status(PUBLIC_DIR)
     copy_files()
-    generate_pages_recursively(basepath)
+    generate_pages_recursively(
+        dest_dir_path=os.path.join(BASE_DIR, "docs"), base_path=basepath
+    )
 
 
 if __name__ == "__main__":

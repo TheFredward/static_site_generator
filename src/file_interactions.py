@@ -40,7 +40,7 @@ def copy_files(
             copy_files(curr_dir, item_found, curr_public_dir)
 
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, base_path="/"):
     print(f"Generating page from: {from_path} to: {dest_path} using {template_path}")
     with open(from_path) as f:
         data_from_path = f.read()
@@ -51,8 +51,8 @@ def generate_page(from_path, template_path, dest_path):
     template_update = data_template_path.replace("{{ Title }}", title)
     template_update = template_update.strip()
     template_update = template_update.replace("{{ Content }}", html_from_path)
-    template_update = template_update.replace('href="/', 'href="{basepath}')
-    template_update = template_update.replace('src="/', 'src="{basepath}')
+    template_update = template_update.replace('href="/', f'href="{base_path}')
+    template_update = template_update.replace('src="/', f'src="{base_path}')
     with open(f"{dest_path}/index.html", "w") as f:
         f.write(template_update)
 
@@ -61,6 +61,7 @@ def generate_pages_recursively(
     dir_path_content=os.path.join(BASE_DIR, CONTENT_DIR),
     template_path=os.path.join(BASE_DIR, TEMPLATE_FILE),
     dest_dir_path=os.path.join(BASE_DIR, PUBLIC_DIR),
+    base_path="/",
 ):
     # My first step should be to find out what content there is
     content_list_files = os.listdir(dir_path_content)
@@ -81,6 +82,12 @@ def generate_pages_recursively(
                 )
                 template_data_updated = template_data_updated.replace(
                     "{{ Content }}", converted_to_html
+                )
+                template_data_updated = template_data_updated.replace(
+                    'src="/', f'src="{base_path}'
+                )
+                template_data_updated = template_data_updated.replace(
+                    'href="/', f'href="{base_path}'
                 )
                 os.makedirs(
                     os.path.dirname(f"{dest_dir_path}/{root}.html"), exist_ok=True
