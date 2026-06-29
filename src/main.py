@@ -17,8 +17,8 @@ def main():
     else:
         print(f"No basepath was passed, will use default: {basepath}")
 
-    check_status(PUBLIC_DIR)
-    copy_files()
+    check_status("docs")
+    copy_files(curr_public_dir=os.path.join(BASE_DIR, "docs"))
     generate_pages_recursively(
         dest_dir_path=os.path.join(BASE_DIR, "docs"), base_path=basepath
     )
